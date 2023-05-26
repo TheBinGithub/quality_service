@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ncvt.quality.mapper.CheckMapper">
+
+    <!-- 实体类映射数据库表 -->
+    <resultMap id="checkRMap" type="com.ncvt.quality.entity.CheckoutEntity">
+        <result column="check_id" property="checkId"></result>
+        <result column="mat_id" property="matId"></result>
+        <result column="check_name" property="checkName"></result>
+        <result column="check_type" property="checkType"></result>
+        <result column="max_standard" property="maxStandard"></result>
+        <result column="min_standard" property="minStandard"></result>
+    </resultMap>
+
+    <!-- 连接查询映射 -->
+    <resultMap id="joinRMap" type="com.ncvt.quality.params.QualityInspection">
+        <result column="check_id" property="checkId"></result>
+        <result column="mat_id" property="matId"></result>
+        <result column="pr" property="pr"></result>
+        <result column="pml" property="pml"></result>
+        <result column="psn" property="psn"></result>
+        <result column="unit" property="unit"></result>
+        <result column="check_name" property="checkName"></result>
+        <result column="check_type" property="checkType"></result>
+        <result column="max_standard" property="maxStandard"></result>
+        <result column="min_standard" property="minStandard"></result>
+    </resultMap>
+
+    <!-- 添加质检数据 -->
+    <!-- keyProperty="userId" 设置主键字段对应的实体类 -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="checkId">
+        INSERT INTO tb_checkout(
+            mat_id,
+            check_name,
+            check_type,
+            max_standard,
+            min_standard
+        ) VALUES (
+            #{matId},#{checkName},#{checkType},#{maxStandard},#{minStandard}
+        )
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        delete from tb_checkout where check_id=#{checkId}
+    </delete>
+
+    <!-- 查询表总量 -->
+    <select id="queryCount" resultMap="checkRMap">
+        SELECT count("check_id") FROM tb_checkout
+    </select>
+
+    <!-- 查询 -->
+    <select id="query" resultMap="joinRMap">
+        <bind name="matLike" value="'%'+pr+'%'"/>
+        <bind name="nameLike" value="'%'+checkName+'%'"/>
+        <bind name="typeLike" value="'%'+checkType+'%'"/>
+        SELECT check_id,c.mat_id,pr,pml,psn,unit,check_name,check_type,max_standard,min_standard
+        FROM tb_checkout c left join tb_material m on c.mat_id=m.mat_id
+        <where>
+            <if test="!pr.equals('@-.@')">
+                and pr like #{matLike}
+            </if>
+            <if test="!checkName.equals('@-.@')">
+                and check_name like #{nameLike}
+            </if>
+            <if test="!checkType.equals('@-.@')">
+                and check_type like #{typeLike}
+            </if>
+        </where>
+        limit #{page}, 10
+    </select>
+
+    <!-- 修改 -->
+    <update id="update">
+        UPDATE tb_checkout
+        SET mat_id=#{matId},check_name=#{checkName},check_type=#{checkType},max_standard=#{maxStandard},min_standard=#{minStandard}
+        WHERE check_id=#{checkId}
+    </update>
+
+</mapper>

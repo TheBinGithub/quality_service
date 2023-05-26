@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    type: com.mysql.cj.jdbc.MysqlDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/quality_db?characterEncoding=utf-8&userSSL=fales
+    username: root
+    password: root
+
+  # knife4j所需
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  # mybatis日志打印
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+server:
+  servlet:
+    # 根目录
+    context-path: /api
+    # 端口号
+  port: 8089
