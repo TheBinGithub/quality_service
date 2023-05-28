@@ -1,5 +1,6 @@
 package com.ncvt.quality.service.impl;
 
+import com.ncvt.quality.entity.CheckoutEntity;
 import com.ncvt.quality.mapper.CheckMapper;
 import com.ncvt.quality.params.CheckParams;
 import com.ncvt.quality.params.QualityInspection;
@@ -48,20 +49,6 @@ public class CheckServiceImpl implements CheckService {
         }
     }
 
-    // 查询总量
-    @Override
-    public Result queryCount() {
-        try {
-            List<QualityInspection> list = checkMapper.queryCount();
-            if (list.toArray().length == 0) return Result.ok(300,"数据表无记录！");
-            Map<String,Integer> map = new HashMap<>();
-            map.put("count",list.toArray().length);
-            return Result.ok("查询成功！", map);
-        }catch (Exception e){
-            log.info("异常："+e);
-            return Result.fail("服务端异常！", e.getMessage());
-        }
-    }
 
     // 查询
     @Override
@@ -80,7 +67,8 @@ public class CheckServiceImpl implements CheckService {
     @Override
     public Result update(String checkId, CheckParams params) {
         try {
-            int result = checkMapper.update(checkId, params);
+            params.setCheckId(checkId);
+            int result = checkMapper.update(params);
             if (result != 1) return Result.fail(300, "修改出现未知异常！");
             return Result.ok("修改成功！", params);
         }catch (Exception e){

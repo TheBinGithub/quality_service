@@ -40,17 +40,6 @@ public class CheckController {
         }
     }
 
-    @ApiOperation("查询质检数据表总量")
-    @GetMapping("/quality/count")
-    public Object queryCountQuality(){
-        try {
-            return checkService.queryCount();
-        }catch (Exception e){
-            log.info("异常："+e);
-            return Result.fail("请求服务器出现错误！", e.getMessage());
-        }
-    }
-
     @ApiOperation("查询质检数据")
     @GetMapping("/quality/{page}/{pr}/{checkName}/{checkType}")
     public Object queryQuality(@PathVariable Integer page,

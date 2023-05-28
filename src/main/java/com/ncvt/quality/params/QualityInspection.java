@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class QualityInspection {
 
+    private String count;  // 数据总量
     private String checkId;  // 检验id
     private String matId;  // 物料id
     private String pr;  // 物料名称

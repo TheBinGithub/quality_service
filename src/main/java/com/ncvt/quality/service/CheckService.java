@@ -11,9 +11,6 @@ public interface CheckService {
     // 删除
     Result delete(String checkId);
 
-    // 查询总量
-    Result queryCount();
-
     // 查询
     Result query(Integer page, String pr, String checkName, String checkType);
 

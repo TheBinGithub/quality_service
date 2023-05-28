@@ -6,7 +6,8 @@ import lombok.Data;
 @Data
 public class CheckParams {
 
-    @ApiModelProperty(value = "物料id", example = "1", required = true)
+    private String checkId;
+    @ApiModelProperty(value = "物料id", required = true)
     private String matId;
     @ApiModelProperty(value = "检验名称", required = true)
     private String checkName;

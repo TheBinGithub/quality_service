@@ -17,6 +17,7 @@
 
     <!-- 连接查询映射 -->
     <resultMap id="joinRMap" type="com.ncvt.quality.params.QualityInspection">
+        <result column="count(check_id)" property="count"></result>
         <result column="check_id" property="checkId"></result>
         <result column="mat_id" property="matId"></result>
         <result column="pr" property="pr"></result>
@@ -50,7 +51,7 @@
 
     <!-- 查询表总量 -->
     <select id="queryCount" resultMap="checkRMap">
-        SELECT count("check_id") FROM tb_checkout
+        SELECT check_id FROM tb_checkout
     </select>
 
     <!-- 查询 -->
@@ -58,8 +59,9 @@
         <bind name="matLike" value="'%'+pr+'%'"/>
         <bind name="nameLike" value="'%'+checkName+'%'"/>
         <bind name="typeLike" value="'%'+checkType+'%'"/>
-        SELECT check_id,c.mat_id,pr,pml,psn,unit,check_name,check_type,max_standard,min_standard
+        SELECT count(check_id),check_id,c.mat_id,pr,pml,psn,unit,check_name,check_type,max_standard,min_standard
         FROM tb_checkout c left join tb_material m on c.mat_id=m.mat_id
+        ORDER BY check_id
         <where>
             <if test="!pr.equals('@-.@')">
                 and pr like #{matLike}

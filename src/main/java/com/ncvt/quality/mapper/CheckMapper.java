@@ -1,6 +1,7 @@
 package com.ncvt.quality.mapper;
 
 
+import com.ncvt.quality.entity.CheckoutEntity;
 import com.ncvt.quality.params.CheckParams;
 import com.ncvt.quality.params.QualityInspection;
 
@@ -15,12 +16,12 @@ public interface CheckMapper {
     Integer delete(String checkId);
 
     // 查询总量
-    List<QualityInspection> queryCount();
+    List<CheckoutEntity> queryCount();
 
     // 查询
     List<QualityInspection> query(Integer page, String pr, String checkName, String checkType);
 
     //修改
-    Integer update(String checkId, CheckParams params);
+    Integer update(CheckParams params);
 
 }
