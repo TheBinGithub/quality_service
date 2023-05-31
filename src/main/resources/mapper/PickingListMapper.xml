@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ncvt.quality.mapper.PickingListMapper">
+
+    <!-- 实体类映射数据库表 -->
+    <resultMap id="pgltRMap" type="com.ncvt.quality.entity.PickingListEntity">
+        <result column="pglt_id" property="pgltId"></result>
+        <result column="pipelining_id" property="pipeliningId"></result>
+        <result column="check_id" property="checkId"></result>
+        <result column="demand_number" property="demandNumber"></result>
+        <result column="received_number" property="receivedNumber"></result>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="query" resultMap="pgltRMap">
+        SELECT pglt_id,pipelining_id,check_id,demand_number,received_number
+        FROM tb_picking_list
+    </select>
+
+</mapper>

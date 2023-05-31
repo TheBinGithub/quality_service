@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ncvt.quality.mapper.IncomingCheckMapper">
+
+    <resultMap id="igckRMap" type="com.ncvt.quality.entity.IncomingCheckEntity">
+        <result column="sampling_id" property="samplingId"></result>
+        <result column="plan_id" property="planId"></result>
+        <result column="check_id" property="checkId"></result>
+        <result column="sampling_number" property="samplingNumber"></result>
+        <result column="check_value" property="checkValue"></result>
+        <result column="check_result" property="checkResult"></result>
+        <result column="check_people" property="checkPeople"></result>
+        <result column="check_date" property="checkDate"></result>
+    </resultMap>
+
+    <!-- 多表查询映射 -->
+    <resultMap id="joinRMap" type="com.ncvt.quality.params.IncomingCheckData">
+        <result column="igck_id" property="igckId"></result>
+        <result column="pipelining_id" property="pipeliningId"></result>
+        <result column="pglt_id" property="pgltId"></result>
+        <result column="pr" property="pr"></result>
+        <result column="pml" property="pml"></result>
+        <result column="psn" property="psn"></result>
+        <result column="unit" property="unit"></result>
+        <result column="demand_number" property="demandNumber"></result>
+        <result column="received_number" property="receivedNumber"></result>
+        <result column="check_number" property="checkNumber"></result>
+        <result column="check_name" property="checkName"></result>
+        <result column="max_standard" property="maxStandard"></result>
+        <result column="min_standard" property="minStandard"></result>
+        <result column="min_standard" property="checkValue"></result>
+        <result column="check_result" property="checkResult"></result>
+        <result column="check_people" property="checkPeople"></result>
+        <result column="check_date" property="checkDate"></result>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="query" resultMap="joinRMap">
+        <bind name="pipeLike" value="'%'+pipeliningId+'%'"/>
+        <bind name="pgltLike" value="'%'+pgltId+'%'"/>
+        <bind name="prLike" value="'%'+pr+'%'"/>
+        <bind name="peopleLike" value="'%'+checkPeople+'%'"/>
+        <bind name="dateLike" value="'%'+checkDate+'%'"/>
+        SELECT igck_id,pipelining_id,pglt_id,pr,pml,psn,unit,
+               demand_number,received_number,check_number,
+               check_name,max_standard,min_standard,
+               check_result,check_people,check_date
+        FROM tb_incoming_check as ic,tb_picking_list as pl,tb_check as c,tb_material as m
+        where ic.pglt_id=pl.pklt_id and pl.check_id=c.check_id and p.mat_id=m.mat_id
+        <where>
+            <if test="pipeliningId != null">
+                and pipelining_id like #{pipeLike}
+            </if>
+            <if test="pgltId != null">
+                and pglt_id like #{pgltLike}
+            </if>
+            <if test="pr != null">
+                and pr like #{prLike}
+            </if>
+            <if test="checkPeople != null">
+                and check_people like #{peopleLike}
+            </if>
+            <if test="checkDate!= null">
+                and check_date like #{dateLike}
+            </if>
+        </where>
+        ORDER BY igck_id
+    </select>
+
+    <!-- 添加 -->
+    <!-- keyProperty="userId" 设置主键字段对应的实体类 -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="igck_id">
+        INSERT INTO tb_incoming_check(
+            pglt_id,check_number,check_value,check_result,check_people,check_date
+        ) VALUES (
+                     #{pgltId},#{checkNumber},#{checkValue},#{checkResult},#{checkPeople},#{checkDate}
+                 )
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        delete from tb_incoming_check where igck_id=#{igckId}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="update">
+        UPDATE tb_incoming_check
+        SET pglt_id=#{pgltId},check_number=#{checkNumber},check_value=#{checkValue},
+            check_result=#{checkResult},check_people=#{checkPeople},check_date=#{checkDate}
+        WHERE igck_id=#{igckId}
+    </update>
+
+
+</mapper>

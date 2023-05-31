@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ncvt.quality.mapper.ProductionMapper">
+
+    <!-- 实体类映射数据库表 -->
+    <resultMap id="prodRMap" type="com.ncvt.quality.entity.ProductionEntity">
+        <result column="prod_id" property="prodId"></result>
+        <result column="pipelining_id" property="pipeliningId"></result>
+        <result column="plan_id" property="planId"></result>
+        <result column="job_name" property="jobName"></result>
+        <result column="prod_name" property="prodName"></result>
+        <result column="mat_id" property="matId"></result>
+        <result column="prod_number" property="prodNumber"></result>
+        <result column="prod_date" property="prodDate"></result>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="query" resultMap="prodRMap">
+        SELECT prod_id,pipelining_id,plan_id,job_name,prod_name,mat_id,prod_number,prod_date
+        FROM tb_production
+    </select>
+
+
+</mapper>

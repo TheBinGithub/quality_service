@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ncvt.quality.mapper.MaterialMapper">
+
+    <!-- 实体类映射数据库表 -->
+    <resultMap id="matRMap" type="com.ncvt.quality.entity.MaterialEntity">
+        <result column="mat_id" property="matId"></result>
+        <result column="pr" property="pr"></result>
+        <result column="pml" property="pml"></result>
+        <result column="psn" property="psn"></result>
+        <result column="unit" property="unit"></result>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="query" resultMap="matRMap">
+        SELECT mat_id,pr,pml,psn,unit FROM tb_material
+    </select>
+
+
+
+</mapper>

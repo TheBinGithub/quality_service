@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ncvt.quality.mapper.SamplingMapper">
+
+    <resultMap id="sampRMap" type="com.ncvt.quality.entity.SamplingEntity">
+        <result column="sampling_id" property="samplingId"></result>
+        <result column="plan_id" property="planId"></result>
+        <result column="check_id" property="checkId"></result>
+        <result column="sampling_number" property="samplingNumber"></result>
+        <result column="check_value" property="checkValue"></result>
+        <result column="check_result" property="checkResult"></result>
+        <result column="check_people" property="checkPeople"></result>
+        <result column="check_date" property="checkDate"></result>
+    </resultMap>
+
+    <!-- 多表查询映射 -->
+    <resultMap id="joinRMap" type="com.ncvt.quality.params.SampleData">
+        <result column="sampling_id" property="samplingId"></result>
+        <result column="pipelining_id" property="pipeliningId"></result>
+        <result column="plan_id" property="planId"></result>
+        <result column="job_name" property="jobName"></result>
+        <result column="pr" property="pr"></result>
+        <result column="pml" property="pml"></result>
+        <result column="psn" property="psn"></result>
+        <result column="unit" property="unit"></result>
+        <result column="check_name" property="checkName"></result>
+        <result column="prod_number" property="prodNumber"></result>
+        <result column="sampling_number" property="samplingNumber"></result>
+        <result column="check_value" property="checkValue"></result>
+        <result column="max_standard" property="maxStandard"></result>
+        <result column="min_standard" property="minStandard"></result>
+        <result column="check_result" property="checkResult"></result>
+        <result column="check_people" property="checkPeople"></result>
+        <result column="check_date" property="checkDate"></result>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="query" resultMap="joinRMap">
+        <bind name="pipeLike" value="'%'+pipeliningId+'%'"/>
+        <bind name="planLike" value="'%'+planId+'%'"/>
+        <bind name="jobLike" value="'%'+jobName+'%'"/>
+        <bind name="prLike" value="'%'+pr+'%'"/>
+        <bind name="nameLike" value="'%'+checkName+'%'"/>
+        <bind name="resultLike" value="'%'+checkResult+'%'"/>
+        <bind name="peopleLike" value="'%'+checkPeople+'%'"/>
+        <bind name="dateLike" value="'%'+checkDate+'%'"/>
+        SELECT sampling_id,pipelining_id,plan_id,job_name,pr,pml,psn,unit,check_name,prod_number,
+               sampling_number,check_value,max_standard,min_standard,check_result,check_people,check_date
+        FROM tb_sampling as s,tb_check as c,tb_production as p,tb_material as m
+        where s.check_id=c.check_id and s.prod_id=p.prod_id and p.mat_id=m.mat_id
+        <where>
+            <if test="!pipeliningId.equals('@-.@')">
+                and pipelining_id like #{pipeLike}
+            </if>
+            <if test="!planId.equals('@-.@')">
+                and plan_id like #{planLike}
+            </if>
+            <if test="!jobName.equals('@-.@')">
+                and job_name like #{jobLike}
+            </if>
+            <if test="!pr.equals('@-.@')">
+                and pr like #{prLike}
+            </if>
+            <if test="!checkName.equals('@-.@')">
+                and check_name like #{nameLike}
+            </if>
+            <if test="!checkResult.equals('@-.@')">
+                and check_result like #{resultLike}
+            </if>
+            <if test="!checkPeople.equals('@-.@')">
+                and check_people like #{peopleLike}
+            </if>
+            <if test="!checkDate.equals('@-.@')">
+                and check_date like #{dateLike}
+            </if>
+        </where>
+        ORDER BY sampling_id
+    </select>
+
+    <!-- 添加 -->
+    <!-- keyProperty="userId" 设置主键字段对应的实体类 -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="samplingId">
+        INSERT INTO tb_sampling(
+            prod_id,check_id,sampling_number,check_value,check_result,check_people,check_date
+        ) VALUES (
+                     #{planId},#{checkId},#{samplingNumber},#{checkValue},#{checkResult},#{checkPeople},#{checkDate}
+                 )
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        delete from tb_sampling where sampling_id=#{samplingId}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="update">
+        UPDATE tb_sampling
+        SET prod_id=#{planId},check_id=#{checkId},sampling_number=#{samplingNumber},check_value=#{checkValue},
+            check_result=#{checkResult},check_people=#{checkPeople},check_date=#{checkDate}
+        WHERE sampling_id=#{samplingId}
+    </update>
+
+</mapper>
